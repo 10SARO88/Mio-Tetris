@@ -1,0 +1,101 @@
+body {
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f8f8f8;
+    flex-direction: column;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center; /* Centra verticalmente */
+}
+
+#tetris {
+    background-color: #fff;
+    /* Rimuovi width e height da qui, li gestiamo con JS */
+    /* Aggiunto un bordo per visibilità */
+    border: 1px solid #ddd;
+}
+
+.side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* Larghezza fissa per il pannello laterale */
+    width: 200px;
+}
+
+.difficulty-select {
+    margin-bottom: 10px;
+}
+
+.difficulty-select label {
+    margin-right: 5px;
+}
+
+#reset-button, #mute-button, #pause-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 5px; /* Spazio tra i pulsanti */
+}
+
+#mute-button, #pause-button {
+    padding: 10px 15px; /* Un po' più piccoli */
+    font-size: 14px;
+    background-color: #3498db; /* Colore diverso */
+}
+
+#reset-button:hover, #mute-button:hover, #pause-button:hover {
+    background-color: #3e8e41;
+}
+
+#mute-button:hover,  #pause-button:hover {
+    background-color: #2980b9;
+}
+
+.touch-controls {
+    display: flex;
+    justify-content: space-between;
+    width: 240px; /* Larghezza iniziale, verrà aggiornata con JS */
+    margin-top: 10px;
+    /* Aggiunto per centrare sotto il canvas */
+    flex-wrap: wrap;
+}
+
+.touch-controls button {
+    padding: 10px 15px;
+    font-size: 20px;
+    background-color: #777;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    /* Fai in modo che occupino spazio uniforme, ma permetti il wrapping */
+    flex: 1 1 calc(33.33% - 4px); /* 3 pulsanti per riga */
+    margin: 2px;
+    min-width: 60px; /* Larghezza minima per evitare pulsanti troppo piccoli */
+}
+
+.touch-controls button:active {
+    background-color: #555;
+}
+.grid-line {
+    stroke: #ddd;
+    stroke-width: 0.05;
+    vector-effect: non-scaling-stroke;
+}

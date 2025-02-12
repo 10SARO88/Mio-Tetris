@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Tetris</h1>
+    <div class="container">
+        <canvas id="tetris" width="240" height="400"></canvas>
+
+        <div class="side-panel">
+            <div>
+                <p>Punteggio: <span id="score">0</span></p>
+                <p>Livello: <span id="level">1</span></p>
+            </div>
+            <button id="mute-button">Muto</button>
+            <button id="pause-button">Pausa</button>
+            <button id="reset-button">Ricomincia</button>
+            <div>
+                <h3>Punteggi Migliori</h3>
+                 <ul id="high-score-list">
+                </ul>
+            </div>
+        </div>
+
+        <div class="touch-controls">
+            <button id="move-left" aria-label="Muovi a sinistra">←</button>
+            <button id="move-right" aria-label="Muovi a destra">→</button>
+            <button id="rotate-left" aria-label="Ruota a sinistra">Q</button>
+            <button id="rotate-right" aria-label="Ruota a destra">W</button>
+            <button id="soft-drop" aria-label="Caduta lenta">↓</button>
+            <button id="hard-drop" aria-label="Caduta veloce">Space</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
