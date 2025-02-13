@@ -9,39 +9,33 @@
 <body>
     <h1>Tetris</h1>
     <div class="container">
+        <div class="difficulty-select">
+            <label for="difficulty">Difficoltà:</label>
+            <select id="difficulty">
+                <option value="easy">Facile</option>
+                <option value="medium" selected>Media</option>
+                <option value="hard">Difficile</option>
+            </select>
+        </div>
         <canvas id="tetris" width="240" height="400"></canvas>
-
         <div class="side-panel">
             <div>
                 <p>Punteggio: <span id="score">0</span></p>
                 <p>Livello: <span id="level">1</span></p>
-            </div>
-             <div>
-                <label for="difficulty">Difficoltà:</label>
-                 <select id="difficulty">
-                    <option value="easy">Facile</option>
-                    <option value="medium" selected>Media</option>
-                     <option value="hard">Difficile</option>
-                </select>
             </div>
             <button id="mute-button">Muto</button>
             <button id="pause-button">Pausa</button>
             <button id="reset-button">Ricomincia</button>
             <div>
                 <h3>Punteggi Migliori</h3>
-                 <ul id="high-score-list">
+                <ul id="high-score-list">
                 </ul>
             </div>
         </div>
-
-        <div class="touch-controls">
-            <button id="move-left" aria-label="Muovi a sinistra">←</button>
-            <button id="move-right" aria-label="Muovi a destra">→</button>
-            <button id="rotate-left" aria-label="Ruota a sinistra">Q</button>
-            <button id="rotate-right" aria-label="Ruota a destra">W</button>
-            <button id="soft-drop" aria-label="Caduta lenta">↓</button>
-            <button id="hard-drop" aria-label="Caduta veloce">Space</button>
-        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
     </div>
 
     <script src="script.js"></script>
