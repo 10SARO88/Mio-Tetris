@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Calcola le righe *e le colonne* visibili
         const visibleRows = Math.floor(canvas.height / BLOCK_SIZE);
-        const visibleCols = Math.floor(canvas.width / BLOCK_SIZE); // Aggiunto
+        const visibleCols = Math.floor(canvas.width / BLOCK_SIZE);
 
         for (let y = 0; y < m.length; ++y) {
             for (let x = 0; x < m[y].length; ++x) {
@@ -230,9 +230,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const boardX = x + o.x;
                     const boardY = y + o.y;
 
-                    // Limita la collisione *sia* alle righe *che* alle colonne visibili
+                    // CORREZIONE: Usa >= per il controllo di collisione, non >
                     if (boardY < 0) continue;
-                    if (boardX < 0 || boardX >= visibleCols || boardY >= visibleRows || (board[boardY] && board[boardY][boardX] !== 0)) { // Usa visibleCols
+                    if (boardX < 0 || boardX >= visibleCols || boardY >= visibleRows || (board[boardY] && board[boardY][boardX] !== 0)) {
                         return true;
                     }
                 }
@@ -516,8 +516,3 @@ document.addEventListener('DOMContentLoaded', () => {
     init(); // Inizializza il gioco
 
 }); // DOMContentLoaded
-
-displayHighScores(); // <--- AGGIUNGI QUESTA RIGA
-
-// --- Avvio del gioco ---
-setDifficulty(); // Imposta la difficoltà iniziale
