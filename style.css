@@ -17,16 +17,20 @@ h1 {
     gap: 20px;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center; /* Centra verticalmente */
 }
 
 #tetris {
     background-color: #fff;
+    border: 1px solid #ddd; /* Aggiunto per visibilità */
+     /* Rimuovi width e height: gestite da JS */
 }
 
 .side-panel {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    width: 200px; /* Larghezza fissa pannello laterale */
 }
 
 .difficulty-select {
@@ -45,19 +49,53 @@ h1 {
     border: none;
     cursor: pointer;
     border-radius: 5px;
-    margin-top: 5px; /* Spazio tra i pulsanti */
+    margin-top: 5px;
 }
+
 #mute-button, #pause-button {
-     padding: 10px 15px; /* Un po' più piccoli */
+    padding: 10px 15px;
     font-size: 14px;
-    background-color: #3498db; /* Colore diverso */
+    background-color: #3498db;
 }
 
 #reset-button:hover, #mute-button:hover, #pause-button:hover {
     background-color: #3e8e41;
 }
+
 #mute-button:hover,  #pause-button:hover {
-     background-color: #2980b9;
+    background-color: #2980b9;
+}
+
+.touch-controls {
+    display: flex;
+    justify-content: space-between;
+    /* width: 240px;  RIMUOVI: La larghezza è gestita dinamicamente */
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.touch-controls button {
+    padding: 10px 15px;
+    font-size: 20px;
+    background-color: #777;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    flex: 1 1 auto; /* Cambiato: Permette ai pulsanti di crescere e riempire lo spazio */
+    margin: 2px;
+     /* min-width non più necessario */
+    max-width: calc(33.33% - 4px); /* Importante: Impedisce ai pulsanti di diventare troppo larghi */
+}
+
+.touch-controls button:active {
+    background-color: #555;
+}
+
+.grid-line {
+    stroke: #ddd;
+    stroke-width: 0.05;
+    vector-effect: non-scaling-stroke;
 }
 
 .grid-line {
