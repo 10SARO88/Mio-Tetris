@@ -22,15 +22,15 @@ h1 {
 
 #tetris {
     background-color: #fff;
-    border: 1px solid #ddd; /* Aggiunto per visibilità */
-     /* Rimuovi width e height: gestite da JS */
+    border: 1px solid #ddd;
+    /* Rimuovi width e height: gestite da JS */
 }
 
 .side-panel {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 200px; /* Larghezza fissa pannello laterale */
+    width: 200px; /* Larghezza fissa */
 }
 
 .difficulty-select {
@@ -69,7 +69,7 @@ h1 {
 .touch-controls {
     display: flex;
     justify-content: space-between;
-    /* width: 240px;  RIMUOVI: La larghezza è gestita dinamicamente */
+    /* width: 240px;  RIMUOVI: gestita da JS */
     margin-top: 10px;
     flex-wrap: wrap;
 }
@@ -82,23 +82,16 @@ h1 {
     border: none;
     cursor: pointer;
     border-radius: 5px;
-    flex: 1 1 auto; /* Cambiato: Permette ai pulsanti di crescere e riempire lo spazio */
+    flex: 1 1 auto; /* Permette ai pulsanti di crescere */
     margin: 2px;
-     /* min-width non più necessario */
-    max-width: calc(33.33% - 4px); /* Importante: Impedisce ai pulsanti di diventare troppo larghi */
+    max-width: calc(33.33% - 4px); /* Impedisce larghezza eccessiva */
 }
 
 .touch-controls button:active {
     background-color: #555;
 }
 
-.grid-line {
-    stroke: #ddd;
-    stroke-width: 0.05;
-    vector-effect: non-scaling-stroke;
-}
-
-.grid-line {
+.grid-line {  /* Non più necessario, ma lascialo se vuoi personalizzare ulteriormente */
     stroke: #ddd;
     stroke-width: 0.05;
     vector-effect: non-scaling-stroke;
