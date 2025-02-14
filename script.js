@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const context = canvas.getContext('2d');
 
     // --- Costanti ---
-    const ROWS = 20;        // Righe totali della griglia di gioco
-    const COLS = 12;        // Colonne totali della griglia di gioco
+    const ROWS = 20;        // Righe totali della griglia di gioco (logica)
+    const COLS = 12;        // Colonne totali della griglia di gioco (logica)
     const BLOCK_SIZE = 20;  // Dimensione di un singolo blocco (in pixel)
     const GRID_COLOR = '#ddd';
     const INITIAL_DROP_INTERVAL = 1000; // Velocità di caduta iniziale (ms)
@@ -219,15 +219,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Controlla se c'è collisione tra il tetramino e la griglia o i bordi
     function collide(board, player) {
         const [m, o] = [player.matrix, player.pos];
+
+        // Calcola le righe visibili *qui*, dentro la funzione collide
+        const visibleRows = Math.floor(canvas.height / BLOCK_SIZE);
+
         for (let y = 0; y < m.length; ++y) {
             for (let x = 0; x < m[y].length; ++x) {
                 if (m[y][x] !== 0) {
                     const boardX = x + o.x;
                     const boardY = y + o.y;
 
-                    // Controlli più precisi, inclusi bordi negativi
-                    if (boardY < 0) continue; // Ignora le parti sopra
-                    if (boardX < 0 || boardX >= COLS || boardY >= ROWS || (board[boardY] && board[boardY][boardX] !== 0)) {
+                    // MODIFICA FONDAMENTALE: Limita la collisione alle righe visibili
+                    if (boardY < 0) continue; // Ignora le parti sopra (come prima)
+                    if (boardX < 0 || boardX >= COLS || boardY >= visibleRows || (board[boardY] && board[boardY][boardX] !== 0)) {
                         return true;
                     }
                 }
