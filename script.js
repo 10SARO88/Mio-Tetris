@@ -220,8 +220,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function collide(board, player) {
         const [m, o] = [player.matrix, player.pos];
 
-        // Calcola le righe visibili *qui*, dentro la funzione collide
+        // Calcola le righe *e le colonne* visibili
         const visibleRows = Math.floor(canvas.height / BLOCK_SIZE);
+        const visibleCols = Math.floor(canvas.width / BLOCK_SIZE); // Aggiunto
 
         for (let y = 0; y < m.length; ++y) {
             for (let x = 0; x < m[y].length; ++x) {
@@ -229,9 +230,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const boardX = x + o.x;
                     const boardY = y + o.y;
 
-                    // MODIFICA FONDAMENTALE: Limita la collisione alle righe visibili
-                    if (boardY < 0) continue; // Ignora le parti sopra (come prima)
-                    if (boardX < 0 || boardX >= COLS || boardY >= visibleRows || (board[boardY] && board[boardY][boardX] !== 0)) {
+                    // Limita la collisione *sia* alle righe *che* alle colonne visibili
+                    if (boardY < 0) continue;
+                    if (boardX < 0 || boardX >= visibleCols || boardY >= visibleRows || (board[boardY] && board[boardY][boardX] !== 0)) { // Usa visibleCols
                         return true;
                     }
                 }
