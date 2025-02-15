@@ -47,12 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPaused;
 
     // --- Audio ---
-    const rotateSound = new Audio('sounds/rotate.ogg');
-    const moveSound = new Audio('sounds/move.ogg');
-    const lineClearSound = new Audio('sounds/line.ogg');
-    const gameOverSound = new Audio('sounds/gameover.ogg');
-    const hardDropSound = new Audio('sounds/harddrop.ogg');
-    const backgroundMusic = new Audio('sounds/background_music.ogg');
+    const rotateSound = new Audio('sounds/rotate.mp3');
+    const moveSound = new Audio('sounds/move.mp3');
+    const lineClearSound = new Audio('sounds/line.mp3');
+    const gameOverSound = new Audio('sounds/gameover.mp3');
+    const hardDropSound = new Audio('sounds/harddrop.mp3');
+    const backgroundMusic = new Audio('sounds/background_music.mp3');
     backgroundMusic.loop = true;
     backgroundMusic.volume = 0.5;
 
