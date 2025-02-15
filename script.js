@@ -47,12 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPaused;
 
     // --- Audio ---
-    const rotateSound = new Audio('sounds/rotate.mp3');
-    const moveSound = new Audio('sounds/move.mp3');
-    const lineClearSound = new Audio('sounds/line.mp3');
-    const gameOverSound = new Audio('sounds/gameover.mp3');
-    const hardDropSound = new Audio('sounds/harddrop.mp3');
-    const backgroundMusic = new Audio('sounds/background_music.mp3');
+    const rotateSound = new Audio('sounds/rotate.mp3'); // Usa MP3!
+    const moveSound = new Audio('sounds/move.mp3');     // Usa MP3!
+    const lineClearSound = new Audio('sounds/line.mp3');  // Usa MP3!
+    const gameOverSound = new Audio('sounds/gameover.mp3');// Usa MP3!
+    const hardDropSound = new Audio('sounds/harddrop.mp3');// Usa MP3!
+    const backgroundMusic = new Audio('sounds/background_music.mp3'); // Usa MP3!
+
     backgroundMusic.loop = true;
     backgroundMusic.volume = 0.5;
 
@@ -485,7 +486,3 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
 
 }); // DOMContentLoaded
-
-    init();
-
-});
