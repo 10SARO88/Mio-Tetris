@@ -4,13 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const context = canvas.getContext('2d');
 
     // --- Costanti ---
-    const ROWS = 20;        // Righe totali della griglia di gioco (logica)
-    const COLS = 12;        // Colonne totali della griglia di gioco (logica)
-    const BLOCK_SIZE = 20;  // Dimensione di un singolo blocco (in pixel)
+    const ROWS = 20;
+    const COLS = 12;
+    const BLOCK_SIZE = 20;
     const GRID_COLOR = '#ddd';
-    const INITIAL_DROP_INTERVAL = 1000; // Velocità di caduta iniziale (ms)
-    const LEVEL_UP_THRESHOLD = 15;      // Linee eliminate per aumentare il livello
-    const SPEED_INCREASE_FACTOR = 0.85; // Fattore di aumento della velocità
+    const INITIAL_DROP_INTERVAL = 1000;
+    const LEVEL_UP_THRESHOLD = 15;
+    const SPEED_INCREASE_FACTOR = 0.85;
 
     // --- Tetramini ---
     const TETROMINOS = [
@@ -25,26 +25,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Colori dei tetramini ---
     const COLORS = [
-        null,        // Nessun colore per il valore 0
-        '#00FFFF',  // Ciano (I)
-        '#0000FF',  // Blu (J)
-        '#FFA500',  // Arancione (L)
-        '#FFFF00',  // Giallo (O)
-        '#00FF00',  // Verde (S)
-        '#800080',  // Viola (T)
-        '#FF0000'   // Rosso (Z)
+        null,
+        '#00FFFF',
+        '#0000FF',
+        '#FFA500',
+        '#FFFF00',
+        '#00FF00',
+        '#800080',
+        '#FF0000'
     ];
 
     // --- Variabili di stato ---
-    let board;           // La griglia di gioco
-    let player;          // Il giocatore (posizione, tetramino, punteggio, ...)
-    let dropCounter;     // Contatore per la caduta automatica
-    let dropInterval;    // Intervallo di caduta automatica (variabile)
-    let lastTime;        // Timestamp dell'ultimo frame
-    let gameOver;        // Indica se il gioco è finito
-    let isMusicPlaying;  // Indica se la musica è in riproduzione
-    let isMuted;         // Indica se l'audio è disattivato
-    let isPaused;        // Indica se il gioco è in pausa
+    let board;
+    let player;
+    let dropCounter;
+    let dropInterval;
+    let lastTime;
+    let gameOver;
+    let isMusicPlaying;
+    let isMuted;
+    let isPaused;
 
     // --- Audio ---
     const rotateSound = new Audio('sounds/rotate.ogg');
@@ -53,41 +53,50 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameOverSound = new Audio('sounds/gameover.ogg');
     const hardDropSound = new Audio('sounds/harddrop.ogg');
     const backgroundMusic = new Audio('sounds/background_music.ogg');
-    backgroundMusic.loop = true;  // Riproduzione in loop
-    backgroundMusic.volume = 0.5; // Volume della musica
+    backgroundMusic.loop = true;
+    backgroundMusic.volume = 0.5;
+
+    // Aggiungi questa variabile
+    let audioInitialized = false;
+
+    // NUOVA FUNZIONE: Inizializza l'audio (sblocca l'autoplay)
+    function startAllAudio() {
+        if (audioInitialized) return; // Evita inizializzazioni multiple
+
+        // Tenta di riprodurre (e mettere in pausa) tutti i suoni
+        rotateSound.play().then(() => rotateSound.pause()).catch(e => console.warn("Audio context:", e.message));
+        moveSound.play().then(() => moveSound.pause()).catch(e => console.warn("Audio context:", e.message));
+        lineClearSound.play().then(() => lineClearSound.pause()).catch(e => console.warn("Audio context:", e.message));
+        gameOverSound.play().then(() => gameOverSound.pause()).catch(e => console.warn("Audio context:", e.message));
+        hardDropSound.play().then(() => hardDropSound.pause()).catch(e => console.warn("Audio context:", e.message));
+        backgroundMusic.play().catch(e => console.warn("Audio context:", e.message)); // La musica di sottofondo può partire subito
+
+        audioInitialized = true; // Imposta il flag
+    }
 
     // --- Funzioni di Utilità ---
-
-    // Crea una matrice (griglia) di dimensioni date, riempita con zeri
     function createMatrix(width, height) {
         return Array(height).fill(null).map(() => Array(width).fill(0));
     }
 
-    // Restituisce la forma di un tetramino dato il suo tipo (numero)
     function createPiece(type) {
         return TETROMINOS[type - 1] || null;
     }
 
     // --- Funzioni di Disegno ---
-
-    // Disegna l'intero gioco (griglia, tetramino corrente, ...)
     function draw() {
-        context.fillStyle = '#444'; // Colore di sfondo del canvas
+        context.fillStyle = '#444';
         context.fillRect(0, 0, canvas.width, canvas.height);
-
-        drawMatrix(board, { x: 0, y: 0 });  // Disegna la griglia
-        drawMatrix(player.matrix, player.pos); // Disegna il tetramino corrente
-        drawGrid();                          // Disegna le linee della griglia
+        drawMatrix(board, { x: 0, y: 0 });
+        drawMatrix(player.matrix, player.pos);
+        drawGrid();
     }
 
-    // Disegna le linee della griglia (solo quelle visibili)
     function drawGrid() {
         context.strokeStyle = GRID_COLOR;
         context.lineWidth = 1;
-
         const visibleRows = Math.floor(canvas.height / BLOCK_SIZE);
         const visibleCols = Math.floor(canvas.width / BLOCK_SIZE);
-
         for (let i = 0; i <= visibleRows; i++) {
             context.beginPath();
             context.moveTo(0, i * BLOCK_SIZE);
@@ -102,20 +111,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Disegna una matrice (griglia o tetramino) sul canvas
     function drawMatrix(matrix, offset) {
         if (!matrix) return;
-
         const visibleRows = Math.floor(canvas.height / BLOCK_SIZE);
         const visibleCols = Math.floor(canvas.width / BLOCK_SIZE);
-
         matrix.forEach((row, y) => {
             row.forEach((value, x) => {
                 if (value !== 0) {
                     const drawX = (x + offset.x) * BLOCK_SIZE;
                     const drawY = (y + offset.y) * BLOCK_SIZE;
-
-                    // Controlla se la cella è visibile prima di disegnarla
                     if (drawX >= 0 && drawX < canvas.width && drawY >= 0 && drawY < canvas.height) {
                         context.fillStyle = COLORS[value];
                         context.fillRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
@@ -126,8 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Funzioni di Gioco ---
-
-    // Unisce il tetramino corrente alla griglia
     function merge(board, player) {
         player.matrix.forEach((row, y) => {
             row.forEach((value, x) => {
@@ -138,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Ruota un tetramino
     function rotate(matrix, dir) {
         const m = matrix.length;
         const rotated = createMatrix(m, m);
@@ -154,7 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return rotated;
     }
 
-    // Fa cadere il tetramino di una posizione verso il basso
     function playerDrop() {
         player.pos.y++;
         if (collide(board, player)) {
@@ -164,63 +164,57 @@ document.addEventListener('DOMContentLoaded', () => {
             sweepRows();
             updateScore();
         }
-        dropCounter = 0; // Resetta il contatore della caduta
+        dropCounter = 0;
     }
 
-   // Muove il tetramino orizzontalmente
     function playerMove(dir) {
         player.pos.x += dir;
         if (collide(board, player)) {
-            player.pos.x -= dir; // Annulla il movimento se c'è collisione
+            player.pos.x -= dir;
         }
-        moveSound.currentTime = 0; // Riproduci il suono dall'inizio
+        moveSound.currentTime = 0;
         moveSound.play();
+
     }
 
-    // Genera un nuovo tetramino casuale e lo posiziona in cima alla griglia
     function playerReset() {
         const pieces = '1234567';
         player.matrix = createPiece(pieces[Math.floor(Math.random() * pieces.length)] | 0);
         player.pos.y = 0;
         player.pos.x = (COLS / 2 | 0) - (player.matrix[0].length / 2 | 0);
 
-        // Se c'è collisione immediata, il gioco è finito
         if (collide(board, player)) {
             gameOver = true;
             gameOverSound.play();
-            updateScore();  // Aggiorna il punteggio prima di resettare
-            board.forEach(row => row.fill(0)); // Pulisci la griglia
+            updateScore();
+            board.forEach(row => row.fill(0));
             player.score = 0;
             player.level = 1;
             player.linesCleared = 0;
         }
     }
 
-    // Ruota il tetramino corrente
     function playerRotate(dir) {
         const pos = player.pos.x;
         let offset = 1;
         let rotatedMatrix = rotate(player.matrix, dir);
 
-        // Gestione delle collisioni durante la rotazione (kick wall)
         while (collide(board, { ...player, matrix: rotatedMatrix })) {
             player.pos.x += offset;
             offset = -(offset + (offset > 0 ? 1 : -1));
             if (offset > player.matrix[0].length) {
-                player.pos.x = pos; // Ripristina la posizione originale
-                return; // Non ruotare
+                player.pos.x = pos;
+                return;
             }
         }
-        player.matrix = rotatedMatrix; // Applica la rotazione
+        player.matrix = rotatedMatrix;
         rotateSound.currentTime = 0;
         rotateSound.play();
+
     }
 
-    // Controlla se c'è collisione tra il tetramino e la griglia o i bordi
     function collide(board, player) {
         const [m, o] = [player.matrix, player.pos];
-
-        // Calcola le righe *e le colonne* visibili
         const visibleRows = Math.floor(canvas.height / BLOCK_SIZE);
         const visibleCols = Math.floor(canvas.width / BLOCK_SIZE);
 
@@ -230,7 +224,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const boardX = x + o.x;
                     const boardY = y + o.y;
 
-                    // CORREZIONE: Usa >= per il controllo di collisione, non >
                     if (boardY < 0) continue;
                     if (boardX < 0 || boardX >= visibleCols || boardY >= visibleRows || (board[boardY] && board[boardY][boardX] !== 0)) {
                         return true;
@@ -241,37 +234,34 @@ document.addEventListener('DOMContentLoaded', () => {
         return false;
     }
 
-    // Rimuove le righe complete e aggiorna il punteggio
     function sweepRows() {
         let rowCount = 0;
         outer: for (let y = ROWS - 1; y > 0; --y) {
             for (let x = 0; x < COLS; ++x) {
-                if (board[y][x] === 0) continue outer; // Se c'è uno spazio vuoto, passa alla riga successiva
+                if (board[y][x] === 0) continue outer;
             }
 
-            // Rimuovi la riga completa e aggiungine una vuota in cima
             const row = board.splice(y, 1)[0].fill(0);
             board.unshift(row);
-            ++y; // Controlla di nuovo la stessa riga (perché ne abbiamo spostata una sopra)
+            ++y;
             rowCount++;
         }
 
-        // Aggiorna il punteggio e il livello in base alle righe eliminate
         if (rowCount > 0) {
             player.score += calculateScore(rowCount) * player.level;
             player.linesCleared += rowCount;
             if (player.linesCleared >= LEVEL_UP_THRESHOLD) {
                 player.level++;
                 player.linesCleared -= LEVEL_UP_THRESHOLD;
-                dropInterval *= SPEED_INCREASE_FACTOR; // Aumenta la velocità
+                dropInterval *= SPEED_INCREASE_FACTOR;
             }
             lineClearSound.currentTime = 0;
             lineClearSound.play();
+
             updateScore();
         }
     }
 
-    // Calcola il punteggio in base al numero di righe eliminate contemporaneamente
     function calculateScore(rowCount) {
         switch (rowCount) {
             case 1: return 40;
@@ -282,19 +272,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Aggiorna il punteggio e il livello visualizzati
     function updateScore() {
         document.getElementById('score').innerText = player.score;
         document.getElementById('level').innerText = player.level;
 
-        // Se il gioco è finito, salva il punteggio migliore
         if (gameOver) {
             addHighScore(player.score);
             displayHighScores();
         }
     }
 
-    // Funzione principale di aggiornamento del gioco (chiamata ripetutamente)
     function update(time = 0) {
         if (!isPaused && !gameOver) {
             const deltaTime = time - lastTime;
@@ -302,17 +289,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             dropCounter += deltaTime;
             if (dropCounter > dropInterval) {
-                playerDrop(); // Fa cadere il tetramino
+                playerDrop();
             }
 
-            draw(); // Ridisegna il gioco
-            requestAnimationFrame(update); // Richiedi il prossimo frame
+            draw();
+            requestAnimationFrame(update);
         }
     }
 
     // --- Funzioni di Controllo ---
-
-    // Imposta la difficoltà (velocità di caduta)
     function setDifficulty() {
         const difficulty = document.getElementById('difficulty').value;
         switch (difficulty) {
@@ -320,23 +305,20 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'medium': dropInterval = 1000; break;
             case 'hard': dropInterval = 800; break;
         }
-        resetGame(); // Resetta il gioco con la nuova difficoltà
+        resetGame();
     }
 
-    // Attiva/disattiva l'audio
     function toggleMute() {
         isMuted = !isMuted;
-        // Imposta il volume di tutti gli effetti sonori e della musica
         rotateSound.volume = isMuted ? 0 : 1;
         moveSound.volume = isMuted ? 0 : 1;
         lineClearSound.volume = isMuted ? 0 : 1;
         gameOverSound.volume = isMuted ? 0 : 1;
         hardDropSound.volume = isMuted ? 0 : 1;
         backgroundMusic.volume = isMuted ? 0 : 0.5;
-        document.getElementById('mute-button').textContent = isMuted ? ' আনমিউট' : 'মিউট'; // Testo del pulsante
+        document.getElementById('mute-button').textContent = isMuted ? ' আনমিউট' : 'মিউট';
     }
 
-    // Mette in pausa/riprende il gioco
     function togglePause() {
         isPaused = !isPaused;
         const pauseButton = document.getElementById("pause-button");
@@ -345,12 +327,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pauseButton) pauseButton.textContent = "Riprendi";
         } else {
             backgroundMusic.play();
-            update(); // Riprendi il ciclo di aggiornamento
+            update();
             if (pauseButton) pauseButton.textContent = "Pausa";
         }
     }
 
-    // Avvia la musica (se non è già in riproduzione)
     function startMusic() {
         if (!isMusicPlaying) {
             backgroundMusic.currentTime = 0;
@@ -359,7 +340,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Resetta il gioco allo stato iniziale
     function resetGame() {
         gameOver = false;
         board = createMatrix(COLS, ROWS);
@@ -368,13 +348,11 @@ document.addEventListener('DOMContentLoaded', () => {
         player.linesCleared = 0;
         playerReset();
         if (!isPaused) {
-            update(); // Avvia il ciclo di aggiornamento (solo se non in pausa)
+            update();
         }
     }
 
     // --- Funzioni per i Punteggi Migliori ---
-
-    // Aggiunge un nuovo punteggio migliore (se necessario)
     function addHighScore(score) {
         const bestScore = getHighScores();
         if (score > bestScore) {
@@ -382,23 +360,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Recupera il punteggio migliore salvato
     function getHighScores() {
         const highScoreJSON = localStorage.getItem('highScore');
         return highScoreJSON ? parseInt(highScoreJSON, 10) : 0;
     }
 
-    // Visualizza i punteggi migliori
     function displayHighScores() {
         const bestScore = getHighScores();
         const highScoreList = document.getElementById('high-score-list');
-        highScoreList.innerHTML = ''; // Pulisci la lista
+        highScoreList.innerHTML = '';
         const listItem = document.createElement('li');
         listItem.textContent = `Punteggio: ${bestScore}`;
         highScoreList.appendChild(listItem);
     }
 
-    // Fa cadere il tetramino fino in fondo (hard drop)
     function hardDrop() {
         while (!collide(board, player)) {
             player.pos.y++;
@@ -411,31 +386,29 @@ document.addEventListener('DOMContentLoaded', () => {
         dropCounter = 0;
         hardDropSound.currentTime = 0;
         hardDropSound.play();
+
     }
 
-    // --- Funzione di Ridimensionamento del Canvas ---
-     function resizeCanvas() {
+    function resizeCanvas() {
         const container = document.querySelector('.container');
         const containerWidth = container.offsetWidth;
         const sidePanelWidth = document.querySelector('.side-panel').offsetWidth;
-        let availableWidth = containerWidth - sidePanelWidth - 40; // Margine
+        let availableWidth = containerWidth - sidePanelWidth - 40;
 
         if (availableWidth <= 0) {
-            availableWidth = 240; // Larghezza minima
+            availableWidth = 240;
         }
 
-        // Calcola la scala in base alla *larghezza* e alle proporzioni originali
         const scale = Math.min(1, availableWidth / (COLS * BLOCK_SIZE));
         canvas.width = COLS * BLOCK_SIZE * scale;
         canvas.height = ROWS * BLOCK_SIZE * scale;
 
         const touchControls = document.querySelector('.touch-controls');
         if (touchControls) {
-            touchControls.style.width = canvas.width + 'px'; // Adatta la larghezza dei controlli
+            touchControls.style.width = canvas.width + 'px';
         }
-        draw(); // Ridisegna
+        draw();
     }
-
 
     // --- Inizializzazione ---
     function init() {
@@ -458,25 +431,24 @@ document.addEventListener('DOMContentLoaded', () => {
         displayHighScores();
         setDifficulty();
         playerReset();
-        resizeCanvas(); // Imposta le dimensioni iniziali del canvas
+        resizeCanvas();
 
         // --- Gestione degli Eventi ---
-
-        // Tasti freccia, Q, W, Spazio, P
         document.addEventListener('keydown', event => {
-            if (event.key === 'ArrowLeft') { startMusic(); playerMove(-1); }
-            else if (event.key === 'ArrowRight') { startMusic(); playerMove(1); }
-            else if (event.key === 'ArrowDown') { startMusic(); playerDrop(); }
-            else if (event.key === 'q') { startMusic(); playerRotate(-1); }
-            else if (event.key === 'w') { startMusic(); playerRotate(1); }
-            else if (event.key === ' ') { startMusic(); hardDrop(); }
-            else if (event.key === 'p' || event.key === 'P') { startMusic(); togglePause(); }
+            if (event.key === 'ArrowLeft') { startAllAudio(); startMusic(); playerMove(-1); }
+            else if (event.key === 'ArrowRight') { startAllAudio(); startMusic(); playerMove(1); }
+            else if (event.key === 'ArrowDown') {  startAllAudio();startMusic(); playerDrop(); }
+            else if (event.key === 'q') { startAllAudio(); startMusic(); playerRotate(-1); }
+            else if (event.key === 'w') { startAllAudio(); startMusic(); playerRotate(1); }
+            else if (event.key === ' ') { startAllAudio(); startMusic(); hardDrop(); }
+            else if (event.key === 'p' || event.key === 'P') { startAllAudio(); startMusic(); togglePause(); }
         });
 
         // Gestione input touch (migliorata)
         function handleTouch(event, action) {
-            event.preventDefault(); // Impedisci il comportamento predefinito del touch (es. scrolling)
-            startMusic();
+            event.preventDefault();
+            startAllAudio(); // Sblocca l'audio *prima* di qualsiasi altra azione
+            startMusic();  // Assicurati che la musica parta
             switch (action) {
                 case 'moveLeft': playerMove(-1); break;
                 case 'moveRight': playerMove(1); break;
@@ -487,7 +459,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Associa gli eventi touch ai pulsanti
         const touchControls = {
             'move-left': 'moveLeft',
             'move-right': 'moveRight',
@@ -501,18 +472,16 @@ document.addEventListener('DOMContentLoaded', () => {
             button.addEventListener('touchstart', (event) => handleTouch(event, action));
         }
 
-        // Eventi di cambio difficoltà, reset, muto, pausa
-        document.getElementById('difficulty').addEventListener('change', () => { startMusic(); setDifficulty(); });
-        document.getElementById('reset-button').addEventListener('click', () => { startMusic(); resetGame(); });
-        document.getElementById('mute-button').addEventListener('click', () => { startMusic(); toggleMute(); });
-        document.getElementById('pause-button').addEventListener('click', () => { startMusic(); togglePause(); });
+        document.getElementById('difficulty').addEventListener('change', () => { startAllAudio(); startMusic(); setDifficulty(); });
+        document.getElementById('reset-button').addEventListener('click', () => { startAllAudio(); startMusic(); resetGame(); });
+        document.getElementById('mute-button').addEventListener('click', () => { startAllAudio(); toggleMute(); }); // Non chiamare startMusic qui
+        document.getElementById('pause-button').addEventListener('click', () => { startAllAudio(); togglePause(); });// Non chiamare startMusic qui
 
-        // Ridimensionamento della finestra
         window.addEventListener('resize', resizeCanvas);
 
-        update(); // Avvia il ciclo di gioco
+        update();
     }
 
-    init(); // Inizializza il gioco
+    init();
 
-}); // DOMContentLoaded
+});
