@@ -421,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
             matrix: null,
             score: 0,
             level: 1,
-            linesCleared: 0
+            linesCleared = 0
         };
         dropCounter = 0;
         dropInterval = INITIAL_DROP_INTERVAL;
@@ -485,9 +485,9 @@ document.addEventListener('DOMContentLoaded', () => {
         update();
     }
 
-    init();
+    init(); // Tieni *solo* questa chiamata!
 
-});
+}); // DOMContentLoaded
 
     init();
 
