@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (collide(board, player)) {
             player.pos.x -= dir;
         }
-        moveSound.currentTime = 0; // Interrompi il suono precedente
+        moveSound.currentTime = 0;
         moveSound.play();
 
     }
@@ -185,7 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (collide(board, player)) {
             gameOver = true;
-            gameOverSound.currentTime = 0; // Interrompi
             gameOverSound.play();
             updateScore();
             board.forEach(row => row.fill(0));
@@ -209,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         player.matrix = rotatedMatrix;
-        rotateSound.currentTime = 0; // Interrompi
+        rotateSound.currentTime = 0;
         rotateSound.play();
 
     }
@@ -256,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 player.linesCleared -= LEVEL_UP_THRESHOLD;
                 dropInterval *= SPEED_INCREASE_FACTOR;
             }
-            lineClearSound.currentTime = 0; // Interrompi
+            lineClearSound.currentTime = 0;
             lineClearSound.play();
 
             updateScore();
@@ -385,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sweepRows();
         updateScore();
         dropCounter = 0;
-        hardDropSound.currentTime = 0; // Interrompi
+        hardDropSound.currentTime = 0;
         hardDropSound.play();
 
     }
