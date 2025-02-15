@@ -47,13 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPaused;
 
     // --- Audio ---
-    const rotateSound = new Audio('sounds/rotate.mp3'); // Usa MP3!
-    const moveSound = new Audio('sounds/move.mp3');     // Usa MP3!
-    const lineClearSound = new Audio('sounds/line.mp3');  // Usa MP3!
-    const gameOverSound = new Audio('sounds/gameover.mp3');// Usa MP3!
-    const hardDropSound = new Audio('sounds/harddrop.mp3');// Usa MP3!
-    const backgroundMusic = new Audio('sounds/background_music.mp3'); // Usa MP3!
-
+    const rotateSound = new Audio('sounds/rotate.ogg');
+    const moveSound = new Audio('sounds/move.ogg');
+    const lineClearSound = new Audio('sounds/line.ogg');
+    const gameOverSound = new Audio('sounds/gameover.ogg');
+    const hardDropSound = new Audio('sounds/harddrop.ogg');
+    const backgroundMusic = new Audio('sounds/background_music.ogg');
     backgroundMusic.loop = true;
     backgroundMusic.volume = 0.5;
 
@@ -173,9 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (collide(board, player)) {
             player.pos.x -= dir;
         }
-        // Interruzione immediata:
-        moveSound.currentTime = 0; // Riporta il tempo a 0 *prima* di play()
+        moveSound.currentTime = 0;
         moveSound.play();
+
     }
 
     function playerReset() {
@@ -186,8 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (collide(board, player)) {
             gameOver = true;
-            gameOverSound.currentTime = 0;
-            gameOverSound.play()
+            gameOverSound.play();
             updateScore();
             board.forEach(row => row.fill(0));
             player.score = 0;
@@ -210,9 +208,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         player.matrix = rotatedMatrix;
-        // Interruzione immediata:
-        rotateSound.currentTime = 0; // Riporta il tempo a 0 *prima* di play()
+        rotateSound.currentTime = 0;
         rotateSound.play();
+
     }
 
     function collide(board, player) {
@@ -257,8 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 player.linesCleared -= LEVEL_UP_THRESHOLD;
                 dropInterval *= SPEED_INCREASE_FACTOR;
             }
-            // Interruzione immediata:
-            lineClearSound.currentTime = 0; // Riporta il tempo a 0
+            lineClearSound.currentTime = 0;
             lineClearSound.play();
 
             updateScore();
@@ -387,9 +384,9 @@ document.addEventListener('DOMContentLoaded', () => {
         sweepRows();
         updateScore();
         dropCounter = 0;
-        // Interruzione immediata:
-        hardDropSound.currentTime = 0; // Riporta il tempo a 0
+        hardDropSound.currentTime = 0;
         hardDropSound.play();
+
     }
 
     function resizeCanvas() {
@@ -421,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
             matrix: null,
             score: 0,
             level: 1,
-            linesCleared = 0
+            linesCleared: 0
         };
         dropCounter = 0;
         dropInterval = INITIAL_DROP_INTERVAL;
@@ -440,7 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('keydown', event => {
             if (event.key === 'ArrowLeft') { startAllAudio(); startMusic(); playerMove(-1); }
             else if (event.key === 'ArrowRight') { startAllAudio(); startMusic(); playerMove(1); }
-            else if (event.key === 'ArrowDown') { startAllAudio(); startMusic(); playerDrop(); }
+            else if (event.key === 'ArrowDown') {  startAllAudio();startMusic(); playerDrop(); }
             else if (event.key === 'q') { startAllAudio(); startMusic(); playerRotate(-1); }
             else if (event.key === 'w') { startAllAudio(); startMusic(); playerRotate(1); }
             else if (event.key === ' ') { startAllAudio(); startMusic(); hardDrop(); }
@@ -484,6 +481,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         update();
     }
+
+    init();
+
+});
 
     init(); // Tieni *solo* questa chiamata!
 
