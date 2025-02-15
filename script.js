@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (collide(board, player)) {
             player.pos.x -= dir;
         }
-        moveSound.currentTime = 0;
+        moveSound.currentTime = 0; // Interrompi il suono precedente
         moveSound.play();
 
     }
@@ -185,6 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (collide(board, player)) {
             gameOver = true;
+            gameOverSound.currentTime = 0; // Interrompi
             gameOverSound.play();
             updateScore();
             board.forEach(row => row.fill(0));
@@ -208,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         player.matrix = rotatedMatrix;
-        rotateSound.currentTime = 0;
+        rotateSound.currentTime = 0; // Interrompi
         rotateSound.play();
 
     }
@@ -255,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 player.linesCleared -= LEVEL_UP_THRESHOLD;
                 dropInterval *= SPEED_INCREASE_FACTOR;
             }
-            lineClearSound.currentTime = 0;
+            lineClearSound.currentTime = 0; // Interrompi
             lineClearSound.play();
 
             updateScore();
@@ -384,9 +385,8 @@ document.addEventListener('DOMContentLoaded', () => {
         sweepRows();
         updateScore();
         dropCounter = 0;
-        hardDropSound.currentTime = 0;
+        hardDropSound.currentTime = 0; //Interrompi
         hardDropSound.play();
-
     }
 
     function resizeCanvas() {
@@ -418,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
             matrix: null,
             score: 0,
             level: 1,
-            linesCleared: 0
+            linesCleared = 0
         };
         dropCounter = 0;
         dropInterval = INITIAL_DROP_INTERVAL;
@@ -437,7 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('keydown', event => {
             if (event.key === 'ArrowLeft') { startAllAudio(); startMusic(); playerMove(-1); }
             else if (event.key === 'ArrowRight') { startAllAudio(); startMusic(); playerMove(1); }
-            else if (event.key === 'ArrowDown') {  startAllAudio();startMusic(); playerDrop(); }
+            else if (event.key === 'ArrowDown') { startAllAudio(); startMusic(); playerDrop(); }
             else if (event.key === 'q') { startAllAudio(); startMusic(); playerRotate(-1); }
             else if (event.key === 'w') { startAllAudio(); startMusic(); playerRotate(1); }
             else if (event.key === ' ') { startAllAudio(); startMusic(); hardDrop(); }
@@ -481,6 +481,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         update();
     }
+
+    init();
+
+}); // DOMContentLoaded
 
     init();
 
