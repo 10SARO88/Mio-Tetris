@@ -385,8 +385,9 @@ document.addEventListener('DOMContentLoaded', () => {
         sweepRows();
         updateScore();
         dropCounter = 0;
-        hardDropSound.currentTime = 0; //Interrompi
+        hardDropSound.currentTime = 0; // Interrompi
         hardDropSound.play();
+
     }
 
     function resizeCanvas() {
@@ -418,7 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
             matrix: null,
             score: 0,
             level: 1,
-            linesCleared = 0
+            linesCleared: 0
         };
         dropCounter = 0;
         dropInterval = INITIAL_DROP_INTERVAL;
@@ -484,4 +485,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     init();
 
-}); // DOMContentLoaded
+});
