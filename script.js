@@ -174,7 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         moveSound.currentTime = 0;
         moveSound.play();
-
     }
 
     function playerReset() {
@@ -185,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (collide(board, player)) {
             gameOver = true;
+            gameOverSound.currentTime = 0;
             gameOverSound.play();
             updateScore();
             board.forEach(row => row.fill(0));
@@ -210,7 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
         player.matrix = rotatedMatrix;
         rotateSound.currentTime = 0;
         rotateSound.play();
-
     }
 
     function collide(board, player) {
@@ -257,7 +256,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             lineClearSound.currentTime = 0;
             lineClearSound.play();
-
             updateScore();
         }
     }
@@ -386,7 +384,6 @@ document.addEventListener('DOMContentLoaded', () => {
         dropCounter = 0;
         hardDropSound.currentTime = 0;
         hardDropSound.play();
-
     }
 
     function resizeCanvas() {
@@ -469,7 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         for (const [id, action] of Object.entries(touchControls)) {
             const button = document.getElementById(id);
-            button.addEventListener('touchstart', (event) => handleTouch(event, action));
+            button.addEventListener('touchstart', (event) => handleTouch
         }
 
         document.getElementById('difficulty').addEventListener('change', () => { startAllAudio(); startMusic(); setDifficulty(); });
@@ -485,3 +482,4 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
 
 });
+
