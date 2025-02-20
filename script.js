@@ -74,13 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
         audioInitialized = true; // Imposta il flag
     }
 
-    // NUOVA FUNZIONE: Riproduci un suono
-    function playSound(sound) {
-        sound.currentTime = 0; // Riavvolgi il suono all'inizio
-        sound.pause(); // Interrompi la riproduzione corrente
-        sound.play(); // Avvia la riproduzione
-    }
-
     // --- Funzioni di Utilità ---
     function createMatrix(width, height) {
         return Array(height).fill(null).map(() => Array(width).fill(0));
@@ -179,7 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (collide(board, player)) {
             player.pos.x -= dir;
         }
-        playSound(moveSound); // Usa la nuova funzione playSound
+        moveSound.currentTime = 0;
+        moveSound.play();
+
     }
 
     function playerReset() {
@@ -190,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (collide(board, player)) {
             gameOver = true;
-            playSound(gameOverSound); // Usa la nuova funzione playSound
+            gameOverSound.play();
             updateScore();
             board.forEach(row => row.fill(0));
             player.score = 0;
@@ -213,7 +208,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         player.matrix = rotatedMatrix;
-        playSound(rotateSound); // Usa la nuova funzione playSound
+        rotateSound.currentTime = 0;
+        rotateSound.play();
+
     }
 
     function collide(board, player) {
@@ -258,7 +255,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 player.linesCleared -= LEVEL_UP_THRESHOLD;
                 dropInterval *= SPEED_INCREASE_FACTOR;
             }
-            playSound(lineClearSound); // Usa la nuova funzione playSound
+            lineClearSound.currentTime = 0;
+            lineClearSound.play();
+
             updateScore();
         }
     }
@@ -385,7 +384,9 @@ document.addEventListener('DOMContentLoaded', () => {
         sweepRows();
         updateScore();
         dropCounter = 0;
-        playSound(hardDropSound); // Usa la nuova funzione playSound
+        hardDropSound.currentTime = 0;
+        hardDropSound.play();
+
     }
 
     function resizeCanvas() {
@@ -484,6 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
 
 });
+
 
 
     init();
